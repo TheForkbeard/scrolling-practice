@@ -7,6 +7,146 @@
     <title>Scrolling practice</title>
 </head>
 <body>
+    <header>
+        <h2>Test for rest</h2>
+    </header>
+    <div>
+        <canvas width="550" height="400" style="border: 1px dashed black"></canvas>
+
+        <script>
+        
+        // ok going to try this from the old cory first
+        // -- The sprite object
+        let sprite = {
+            sourceX: 0,
+            sourceY: 0,
+            sourceWidth: 64,
+            sourceHeight: 64,
+            x: 0,
+            y: 0,
+            height: 64,
+            width: 64
+        };
+
+        // The main program
+
+        // The canvas and it's drawing frame
+        let canvas = document.querySelector("canvas");
+        let drawingSurface = canvas.getContext("2d");
+
+        // An array to store sprites
+        let sprites = [];
+
+        // Create the background sprite
+        let background = Object.create(sprite);
+        background.sourceY = 64;
+        background.sourceWidth = 2561;
+        background.sourceHeight = 1922;
+        background.width = 2561;
+        background.height = 1922;
+        background.x = -(background.width - canvas.width) / 2;
+        background.y = -(background.height - canvas.height) / 2;
+        sprites.push(background);
+
+        // create the cat sprite and center it
+        let cat = Object.create(sprite);
+        cat.x = 243;
+        cat.y = 168;
+        sprites.push(cat);
+
+        //load the image
+        let image = new Image();
+        image.src = "assets/images/phobosTileSheet.png";
+        image.addEventListener("load", loadHandler, false);
+
+        // add a keyboard listener
+        window.addEventListener("keydown", keydownHandler, false);
+        window.addEventListener("keyup", keyupHandler, false);
+
+        // arrow key codes
+        let UP = 38;
+        let DOWN = 40;
+        let RIGHT = 39;
+        let LEFT = 37;
+
+        // General vx and vy variable to control the movement of the cat
+        let vx = 0;
+        let vy = 0;
+
+        function keydownHandler(event) {
+            switch(event.keyCode) {
+                case UP:
+                    vy = -5;
+                    break;
+                case DOWN:
+                    vy = +5;
+                    break;
+                case LEFT:
+                    vx = -5;
+                    break;
+                case RIGHT:
+                    vx = +5;
+                    break;
+            }
+        }
+        
+        function keyupHandler(event) {
+            if(event.keyCode === LEFT || event.keyCode === RIGHT) {
+                vx = 0;
+            } else if(event.keyCode === UP || event.keyCode === DOWN) {
+                vy = 0;
+            }
+        }
+
+        function loadHandler() {
+            update();
+        }
+
+        function update() {
+            // Start the animation loop
+            setTimeout(update, 16);
+
+            // Move the background
+            background.x += -vx;
+            background.y += -vy;
+
+            // Check the canvas boundaries and prevent background from crossing them
+            if(background.x > 0) {
+                background.x = 0;
+            }
+            if(background.y > 0) {
+                background.y = 0;
+            }
+            if(background.x < canvas.width - background.width) {
+                background.x = canvas.width - background.width;
+            }
+            if(background.y < canvas.height - background.height) {
+                background.y = canvas.height - background.height;
+            }
+
+            render();
+        }
+
+        function render(event) {
+            drawingSurface.clearRect(0, 0, canvas.width, canvas.height);
+            for(let i = 0; i < sprites.length; i++) {
+                let sprite = sprites[i];
+                drawingSurface.drawImage(
+                    image,
+                    sprite.sourceX,
+                    sprite.sourceY,
+                    sprite.sourceWidth,
+                    sprite.sourceHeight,
+                    sprite.x,
+                    sprite.y,
+                    sprite.width,
+                    sprite.height
+                );
+            }
+        }
+
+        </script>
+    </div>
     
 </body>
 </html>
