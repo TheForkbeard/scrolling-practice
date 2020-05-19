@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Maze scroll</title>
+</head>
+<body>
+    <header>
+        <a class="nav" href="index.html">First Scroll</a>
+        <a class="active nav" href="maze-scroll.html">Maze Scroll</a>
+        <h2>Test for rest</h2>
+    </header>
+    <div class="">
+        <canvas class="stage" width="450" height="450" style="border: 1px dashed black"></canvas>
+    </div>
+
+    <script>
+
+        // canvas variables
+        let canvas = document.querySelector("canvas");
+        let drawingSurface = canvas.getContext("2d");
+
+        // game map variable
+        let map = [
+            [2, 2, 2, 2, 2, 2, 2],
+            [2, 1, 1, 1, 2, 1, 2],
+            [2, 1, 2, 1, 2, 1, 2],
+            [2, 1, 2, 1, 1, 1, 2],
+            [2, 1, 2, 2, 2, 1, 2],
+            [2, 1, 1, 1, 2, 1, 2],
+            [2, 2, 2, 2, 2, 2, 2]
+        ];
+
+        // game object variable
+        let gameObject = [
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 3, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
+        ];
+
+        //map codes
+        const EMPTY = 0;
+        const FLOOR  = 1;
+        const WALL = 2;
+        const MUTTY = 3;
+
+        // the size of each tile cell, this is what I need to be able to adapt make this work
+        const SIZE = 64;
+        // lets see if that works?
+
+        let mutty = null;
+
+        const ROWS = map.length;
+        const COLUMNS = map[0].length;
+
+        // now I will try to render this but first I need to locate mutty
+        let muttyRow;
+        let muttyColumn;
+
+        for(let row = 0; row < ROWS; row++) {
+            for(let column = 0; column < COLUMNS; column++) {
+                if(gameObject[row][column] === MUTTY) {
+                    muttyRow = row;
+                    muttyColumn = column;
+                }
+            }
+        }
+
+        render();
+
+        function render() {
+
+            /* if(drawingSurface.hasChildNodes()) {
+                for(let i = 0; i < ROWS * COLUMNS; i++) {
+                    drawingSurface.removeChild(drawingSurface.firstChild);
+                }
+            }*/
+
+            for(let row = 0; row < ROWS; row++) {
+                for(let column = 0; column < COLUMNS; column++) {
+                    // Create an image tag called cell
+                    let cell = document.createElement("img");
+
+                    // Set it's css class to cell
+                    cell.setAttribute("class", "cell");
+
+                    // Add the img tag to the <div id="stage"> tag
+                    canvas.appendChild(cell);
+
+                    switch(map[row][column]) {
+                        case FLOOR: cell.src = "assets/images/maze-floor-prototype.png";
+                        break;
+                        case WALL: cell.src = "assets/images/maze-wall-prototype.png";
+                        break;
+                    }
+
+                    switch(gameObject[row][column]) {
+                        case MUTTY: cell.src = "assets/images/mutty-prototype.png";
+                        break;
+                    }
+
+                     // Position the cell
+                    cell.style.top = row * SIZE + "px";
+                    cell.style.left = column * SIZE + "px";
+
+                }
+            }
+
+        }
+
+
+
+    </script>
+
+</body>
+</html>
